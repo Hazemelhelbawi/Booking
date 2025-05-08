@@ -20,7 +20,7 @@ const Navbar = () => {
           <NavLink to="/" className="block py-1">
             {({ isActive }) => (
               <>
-                <span className="py-1">Home</span>
+                <span className="py-1">HOME</span>
                 <hr
                   className={`h-0.5 bg-primary w-3/4 m-auto mt-1 transition-transform duration-300 transform origin-center ${
                     isActive ? "scale-x-100 opacity-100" : "scale-x-0 opacity-0"
@@ -48,7 +48,7 @@ const Navbar = () => {
           <NavLink to="/about" className="block py-1">
             {({ isActive }) => (
               <>
-                <span className="py-1">About</span>
+                <span className="py-1">ABOUT</span>
                 <hr
                   className={`h-0.5 bg-primary w-3/4 m-auto mt-1 transition-transform duration-300 transform origin-center ${
                     isActive ? "scale-x-100 opacity-100" : "scale-x-0 opacity-0"
@@ -62,7 +62,7 @@ const Navbar = () => {
           <NavLink to="/contact" className="block py-1">
             {({ isActive }) => (
               <>
-                <span className="py-1">Contact</span>
+                <span className="py-1">CONTACT</span>
                 <hr
                   className={`h-0.5 bg-primary w-3/4 m-auto mt-1 transition-transform duration-300 transform origin-center ${
                     isActive ? "scale-x-100 opacity-100" : "scale-x-0 opacity-0"
