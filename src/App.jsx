@@ -1,15 +1,14 @@
-import React from "react";
 import { Route, Routes } from "react-router-dom";
-import Home from "./pages/Home";
-import Doctors from "./pages/Doctors";
-import Contact from "./pages/Contact";
-import About from "./pages/About";
-import Login from "./pages/Login";
-import Profile from "./pages/Profile";
-import Appointment from "./pages/Appointment";
-import MyAppointment from "./pages/MyAppointment";
-import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import Navbar from "./components/Navbar";
+import About from "./pages/About";
+import Appointment from "./pages/Appointment";
+import Contact from "./pages/Contact";
+import Doctors from "./pages/Doctors";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import MyAppointment from "./pages/MyAppointment";
+import Profile from "./pages/Profile";
 const App = () => {
   return (
     <div className="mx-4 sm:mx-[10%] ">

@@ -3,11 +3,6 @@ import Button from "./ui/Button";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 const TopDoctors = () => {
-  // const [showMore, setShowMore] = useState(false);
-
-  // const handleShowMore = () => {
-  //   setShowMore(!showMore);
-  // };
   const { doctors } = useContext(AppContext);
   const navitage = useNavigate();
   return (
