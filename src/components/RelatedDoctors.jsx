@@ -1,22 +1,33 @@
-import { useContext } from "react";
-import Button from "./ui/Button";
-import { useNavigate } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
-const TopDoctors = () => {
+import { useNavigate } from "react-router-dom";
+
+const RelatedDoctors = ({ docId, speciality }) => {
   const { doctors } = useContext(AppContext);
+
+  const [relDoc, setRelDoc] = useState([]);
+
   const navigate = useNavigate();
+  useEffect(() => {
+    if (doctors.length > 0 && speciality) {
+      const doctorsData = doctors.filter(
+        (doc) => doc.speciality === speciality && doc._id !== docId
+      );
+      setRelDoc(doctorsData);
+    }
+  }, [doctors, speciality, docId]);
   return (
-    <div className="flex flex-col items-center gsp-4 my-16 text-gray-900 md:mx-10 ">
+    <>
       <div className=" flex flex-col items-center justify-center">
-        <h2 className="text-3xl font-medium">Top Doctors to Book</h2>
-        <p className=" text-center text-sm ">
-          Simply browse through our extensive list of trusted doctors.
-        </p>
+        <h2 className="text-3xl font-medium">Related Doctors</h2>
       </div>
       <div className="w-full grid grid-cols-auto gap-4 pt-5 gap-y-6 px-3 sm:px-0">
-        {doctors.slice(0, 10).map((doctor, index) => (
+        {relDoc.slice(0, 5).map((doctor, index) => (
           <div
-            onClick={() => navigate(`/appointment/${doctor._id}`)}
+            onClick={() => {
+              navigate(`/appointment/${doctor._id}`);
+              scrollTo(0, 0);
+            }}
             key={index}
             className="border border-blue-200 rounded-xl overflow-hidden cursor-pointer hover:translate-y-[-10px] transition-all duration-500"
             // className=" border border-blue-200 rounded-xl overflow-hidden cursor-pointer hover:translate-y-[-10] transition-all duration-500"
@@ -44,17 +55,8 @@ const TopDoctors = () => {
           </div>
         ))}
       </div>
-      <Button
-        onClick={() => {
-          navigate("/doctors");
-          scrollTo(0, 0);
-        }}
-        className="bg-blue-50 text-gray-600 px-12 py-3 rounded-full mt-10"
-      >
-        more
-      </Button>
-    </div>
+    </>
   );
 };
 
-export default TopDoctors;
+export default RelatedDoctors;

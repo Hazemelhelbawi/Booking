@@ -1,76 +1,74 @@
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
-import { assets } from "../assets/assets";
-import Button from "../components/ui/Button";
+import DoctorDetails from "../components/DoctorDetails";
+import BookingSlots from "../components/BookingSlots";
+import RelatedDoctors from "../components/RelatedDoctors";
 
 const Appointment = () => {
   const { doctorId } = useParams();
-  const { doctors, specialityData, currencySymbol } = useContext(AppContext);
-  const [docInfo, setDocInfo] = useState(null);
+  const { doctors, currencySymbol } = useContext(AppContext);
 
-  const fetchDocInfo = async () => {
-    const docInfo = doctors.find((doc) => doc._id === doctorId);
-    setDocInfo(docInfo);
-    console.log("docInfo", docInfo);
-  };
+  const [docInfo, setDocInfo] = useState(null);
+  const [weeklySlots, setWeeklySlots] = useState([]);
+  const [slotIndex, setSlotIndex] = useState(0);
+  const [slotTime, setSlotTime] = useState("");
 
   useEffect(() => {
-    fetchDocInfo();
+    const doc = doctors.find((d) => d._id === doctorId);
+    setDocInfo(doc);
   }, [doctorId, doctors]);
+
+  useEffect(() => {
+    if (!docInfo) return;
+
+    const today = new Date();
+    const slots = Array.from({ length: 7 }, (_, i) => {
+      const date = new Date(today);
+      date.setDate(today.getDate() + i);
+
+      const start = new Date(date);
+      const end = new Date(date);
+      end.setHours(21, 0, 0, 0);
+
+      if (i === 0) {
+        const now = new Date();
+        start.setHours(now.getHours() > 10 ? now.getHours() + 1 : 10);
+        start.setMinutes(now.getMinutes() > 30 ? 30 : 0);
+      } else {
+        start.setHours(10, 0, 0, 0);
+      }
+
+      const daySlots = [];
+      while (start <= end) {
+        daySlots.push({
+          datetime: new Date(start),
+          time: start.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+        });
+        start.setMinutes(start.getMinutes() + 30);
+      }
+
+      return { date, slots: daySlots };
+    });
+
+    setWeeklySlots(slots);
+  }, [docInfo]);
+
   return (
     docInfo && (
       <div>
-        {/*------------- doctors details -------------*/}
-
-        <div className="flex flex-col sm:flex-row gap-4 ">
-          <div>
-            <img
-              src={docInfo?.image}
-              alt={docInfo?.name}
-              className="bg-primary w-full sm:max-w-72  rounded-lg"
-            />
-          </div>
-          <div className="flex-1 gap-2 p-8  border border-gray-400 rounded-lg py-7 bg-white mx-2 sm:mx-0 mt-[-80px] sm:mt-0">
-            {/* ------------- doctors info : name , degree , expirence -------------*/}
-            <div className="flex items-center gap-2 text-xl font-medium text-gray-900">
-              <p>{docInfo?.name}</p>
-              <img
-                className="w-5"
-                src={assets.verified_icon}
-                alt="verified_icon"
-              />
-            </div>
-            <div className="flex items-center gap-2 text-sm text-gray-600 mt-1">
-              <span>{docInfo?.degree}</span>
-              <span>-</span>
-              <span>{docInfo?.speciality}</span>
-
-              <Button className="py-0.5 px-2 border text-xs rounded-full ">
-                {docInfo.experience}
-              </Button>
-            </div>
-
-            {/*------------- doctors about------------- */}
-            <div>
-              <p className="text-gray-900 flex items-center gap-2 text-sm font-medium mt-3">
-                <span className="text-gray-600 font-semibold">About</span>
-                <img src={assets.info_icon} alt="info_icon" />
-              </p>
-              <p className="text-gray-500 text-sm max-w-[700px] mt-1">
-                {docInfo?.about}
-              </p>
-            </div>
-
-            {/* Appointment fee */}
-            <div className="flex items-center gap-2 mt-4 text-gray-600">
-              <p className=" font-medium ">Appointment fee:</p>
-              <span className="text-gray-500 text-sm">
-                {currencySymbol} {docInfo.fees}
-              </span>
-            </div>
-          </div>
-        </div>
+        <DoctorDetails docInfo={docInfo} currencySymbol={currencySymbol} />
+        <BookingSlots
+          weeklySlots={weeklySlots}
+          slotIndex={slotIndex}
+          setSlotIndex={setSlotIndex}
+          slotTime={slotTime}
+          setSlotTime={setSlotTime}
+        />
+        <RelatedDoctors docId={doctorId} speciality={docInfo.speciality} />
       </div>
     )
   );
