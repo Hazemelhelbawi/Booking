@@ -1,3 +1,4 @@
+import toast, { Toaster } from "react-hot-toast";
 import Button from "./ui/Button";
 
 const BookingSlots = ({
@@ -7,7 +8,17 @@ const BookingSlots = ({
   slotTime,
   setSlotTime,
 }) => {
+  // Removed unused appointmentData state
   const daysOfWeek = ["SUN", "Mon", "TUE", "WED", "THU", "FRI", "SAT"];
+
+  const handleBook = () => {
+    if (slotIndex !== null && slotTime) {
+      toast.success("Appointment booked successfully!");
+      // Save data logic here if needed
+    } else {
+      toast.error("You should complete your booking data");
+    }
+  };
 
   return (
     <div className="sm:ml-72 sm:pl-4 mt-4 font-medium text-gray-700">
@@ -49,9 +60,13 @@ const BookingSlots = ({
         ))}
       </div>
 
-      <Button className="bg-primary text-white font-light px-14 py-3 rounded-full my-6 ">
+      <Button
+        className="bg-primary text-white font-light px-14 py-3 rounded-full my-6"
+        onClick={handleBook}
+      >
         Book an Appointment
       </Button>
+      <Toaster position="top-right" />
     </div>
   );
 };
